@@ -7,15 +7,15 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
 <style>
 :root {
-    --bg:#090c14; --card:rgba(255,255,255,.045); --border:rgba(255,255,255,.09);
-    --accent:#7c6cf0; --accent2:#00d2ff; --text:#eef0f4; --muted:#93a0b4;
+    --bg:#0e0a12; --card:rgba(255,255,255,.045); --border:rgba(255,255,255,.09);
+    --accent:#9b5cf6; --accent2:#ff8c3d; --text:#f2eef7; --muted:#a99cc2;
     --danger:#ff5470; --ok:#2dd4a7;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
     font-family:"Inter","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-    background:radial-gradient(1000px 560px at 15% -12%, rgba(124,108,240,.20), transparent 60%),
-               radial-gradient(900px 460px at 112% 0%, rgba(0,210,255,.12), transparent 60%),
+    background:radial-gradient(1000px 560px at 15% -12%, rgba(155,92,246,.24), transparent 60%),
+               radial-gradient(900px 460px at 112% 0%, rgba(255,140,61,.16), transparent 60%),
                var(--bg);
     color:var(--text); min-height:100vh;
     display:flex; flex-direction:column;
@@ -34,7 +34,7 @@ header {
     width:38px; height:38px; border-radius:11px; flex-shrink:0;
     background:linear-gradient(135deg, var(--accent), var(--accent2));
     display:flex; align-items:center; justify-content:center; font-size:16px;
-    box-shadow:0 4px 18px rgba(124,108,240,.45);
+    box-shadow:0 4px 18px rgba(155,92,246,.45);
 }
 .brand h1 { font-size:17px; font-weight:800; letter-spacing:.4px; }
 .brand small { display:block; font-size:11px; color:var(--muted); font-weight:500; }
@@ -82,8 +82,8 @@ main { flex:1; display:flex; flex-direction:column; align-items:center; padding:
     text-decoration:none; color:#fff; transition:transform .15s, box-shadow .2s;
 }
 .big-btn:active { transform:scale(.96); }
-.big-btn.watch { background:linear-gradient(135deg, var(--accent), #8e7bff); box-shadow:0 6px 22px rgba(108,92,231,.45); }
-.big-btn.download { background:linear-gradient(135deg, #0088cc, #00c2ff); box-shadow:0 6px 22px rgba(0,150,220,.45); }
+.big-btn.watch { background:linear-gradient(135deg, var(--accent), #c084fc); box-shadow:0 6px 22px rgba(155,92,246,.45); }
+.big-btn.download { background:linear-gradient(135deg, #f59e0b, var(--accent2)); box-shadow:0 6px 22px rgba(255,140,61,.45); }
 
 /* ── Custom control bar ── */
 .controls {
@@ -103,7 +103,7 @@ main { flex:1; display:flex; flex-direction:column; align-items:center; padding:
 }
 .cbtn:hover { background:rgba(255,255,255,.25); }
 .progress-wrap { flex:1; height:5px; background:rgba(255,255,255,.18); border-radius:99px; cursor:pointer; position:relative; }
-.progress-bar { height:100%; background:linear-gradient(90deg, #8b5e34, #c68642); border-radius:99px; width:0%; }
+.progress-bar { height:100%; background:linear-gradient(90deg, var(--accent2), var(--accent)); border-radius:99px; width:0%; }
 .time-label { font-size:11.5px; color:#d1d5db; min-width:70px; text-align:center; flex-shrink:0; }
 .go-live {
     padding:0 14px; height:30px; border:none; border-radius:999px;
@@ -161,7 +161,7 @@ main { flex:1; display:flex; flex-direction:column; align-items:center; padding:
 .progress-time { font-size:12.5px; color:var(--muted); font-variant-numeric:tabular-nums; min-width:62px; flex-shrink:0; }
 .progress-time.right { text-align:right; }
 .stat-box.wide .progress-wrap { height:8px; }
-.stat-box.wide .progress-bar { background:linear-gradient(90deg, var(--accent2), var(--accent)); box-shadow:0 0 10px rgba(0,210,255,.35); }
+.stat-box.wide .progress-bar { background:linear-gradient(90deg, var(--accent2), var(--accent)); box-shadow:0 0 10px rgba(255,140,61,.4); }
 
 footer { text-align:center; color:var(--muted); font-size:11.5px; padding:18px 14px 22px; }
 </style>
