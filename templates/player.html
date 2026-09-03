@@ -7,36 +7,37 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
 <style>
 :root {
-    --bg:#0b0f1a; --card:rgba(255,255,255,.05); --border:rgba(255,255,255,.1);
-    --accent:#6c5ce7; --accent2:#00d2ff; --text:#e5e7eb; --muted:#9ca3af;
+    --bg:#090c14; --card:rgba(255,255,255,.045); --border:rgba(255,255,255,.09);
+    --accent:#7c6cf0; --accent2:#00d2ff; --text:#eef0f4; --muted:#93a0b4;
     --danger:#ff5470; --ok:#2dd4a7;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
-    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
-    background:radial-gradient(900px 500px at 20% -10%, rgba(108,92,231,.22), transparent 60%),
-               radial-gradient(800px 400px at 110% 0%, rgba(0,210,255,.13), transparent 60%),
+    font-family:"Inter","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
+    background:radial-gradient(1000px 560px at 15% -12%, rgba(124,108,240,.20), transparent 60%),
+               radial-gradient(900px 460px at 112% 0%, rgba(0,210,255,.12), transparent 60%),
                var(--bg);
     color:var(--text); min-height:100vh;
     display:flex; flex-direction:column;
+    -webkit-font-smoothing:antialiased;
 }
 
 /* ── Header ── */
 header {
     padding:16px 24px; display:flex; align-items:center; justify-content:space-between;
     border-bottom:1px solid var(--border);
-    background:rgba(11,15,26,.75); backdrop-filter:blur(12px);
+    background:rgba(9,12,20,.78); backdrop-filter:blur(14px);
     position:sticky; top:0; z-index:50;
 }
 .brand { display:flex; align-items:center; gap:12px; }
 .logo {
-    width:36px; height:36px; border-radius:10px; flex-shrink:0;
+    width:38px; height:38px; border-radius:11px; flex-shrink:0;
     background:linear-gradient(135deg, var(--accent), var(--accent2));
     display:flex; align-items:center; justify-content:center; font-size:16px;
-    box-shadow:0 4px 16px rgba(108,92,231,.45);
+    box-shadow:0 4px 18px rgba(124,108,240,.45);
 }
-.brand h1 { font-size:17px; font-weight:700; letter-spacing:.5px; }
-.brand small { display:block; font-size:11px; color:var(--muted); font-weight:400; }
+.brand h1 { font-size:17px; font-weight:800; letter-spacing:.4px; }
+.brand small { display:block; font-size:11px; color:var(--muted); font-weight:500; }
 
 .live-badge { display:none; align-items:center; gap:7px; padding:5px 13px; border-radius:999px;
     background:rgba(255,45,45,.12); border:1px solid rgba(255,45,45,.4); }
@@ -53,8 +54,8 @@ main { flex:1; display:flex; flex-direction:column; align-items:center; padding:
 /* ── Player shell ── */
 .shell {
     position:relative; width:100%; max-width:960px; aspect-ratio:16/9;
-    background:#000; border-radius:16px; overflow:hidden;
-    border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,.5);
+    background:#000; border-radius:18px; overflow:hidden;
+    border:1px solid var(--border); box-shadow:0 24px 70px rgba(0,0,0,.55);
 }
 #video { width:100%; height:100%; object-fit:contain; background:#000; display:block; }
 
@@ -119,22 +120,50 @@ main { flex:1; display:flex; flex-direction:column; align-items:center; padding:
 .live-elapsed { display:flex; align-items:center; gap:6px; }
 .live-elapsed .ldot { width:6px; height:6px; border-radius:50%; background:var(--accent2); flex-shrink:0; }
 
-/* ── Stats grid (Quality / Bitrate / Buffer / Latency) ── */
+/* ── Stats grid (Status / Duration / Quality / Audio / Buffer / Latency / Progress) ── */
 .stats-grid {
     display:grid; grid-template-columns:1fr 1fr; gap:12px;
-    width:100%; max-width:960px; margin-top:16px;
+    width:100%; max-width:960px; margin-top:18px;
 }
-.stat-box { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
-.stat-label { font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:6px; }
-.stat-value { font-size:20px; font-weight:700; color:var(--accent2); }
+.stat-box {
+    background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 16px;
+    transition:border-color .2s, transform .2s, box-shadow .2s;
+}
+.stat-box:hover { border-color:rgba(255,255,255,.2); transform:translateY(-1px); box-shadow:0 8px 22px rgba(0,0,0,.25); }
+.stat-box.wide { grid-column:1 / -1; }
+.stat-label {
+    font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; margin-bottom:7px;
+    font-weight:600; display:flex; align-items:center; gap:6px;
+}
+.stat-value { font-size:19px; font-weight:700; color:var(--accent2); letter-spacing:.3px; font-variant-numeric:tabular-nums; }
+.stat-value.s-live { color:var(--ok); }
+.stat-value.s-ended { color:var(--danger); }
+.stat-value.s-connecting { color:var(--muted); font-size:16px; }
 .stat-select {
     width:100%; background:transparent; border:none; outline:none; appearance:none;
-    -webkit-appearance:none; font-size:20px; font-weight:700; color:var(--accent2);
+    -webkit-appearance:none; font-size:19px; font-weight:700; color:var(--accent2);
     cursor:pointer; font-family:inherit; padding:0;
 }
-.stat-select option { background:#0b0f1a; color:var(--text); }
+.stat-select option { background:#0e1424; color:var(--text); }
 
-footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; }
+/* Audio ON/OFF toggle pill */
+.audio-toggle {
+    width:100%; padding:8px 0; border-radius:9px; cursor:pointer; font-family:inherit;
+    font-size:15px; font-weight:800; letter-spacing:1px; transition:background .2s, border-color .2s, color .2s;
+    border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.05); color:var(--text);
+}
+.audio-toggle.on { background:rgba(45,212,167,.12); border-color:rgba(45,212,167,.5); color:var(--ok); }
+.audio-toggle.off { background:rgba(255,84,112,.12); border-color:rgba(255,84,112,.5); color:var(--danger); }
+.audio-toggle:active { transform:scale(.97); }
+
+/* Video progress box (moved off the player itself) */
+.progress-row { display:flex; align-items:center; gap:12px; margin-top:2px; }
+.progress-time { font-size:12.5px; color:var(--muted); font-variant-numeric:tabular-nums; min-width:62px; flex-shrink:0; }
+.progress-time.right { text-align:right; }
+.stat-box.wide .progress-wrap { height:8px; }
+.stat-box.wide .progress-bar { background:linear-gradient(90deg, var(--accent2), var(--accent)); box-shadow:0 0 10px rgba(0,210,255,.35); }
+
+footer { text-align:center; color:var(--muted); font-size:11.5px; padding:18px 14px 22px; }
 </style>
 </head>
 <body>
@@ -166,10 +195,10 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
             <div class="controls-bottom">
                 <span class="time-label live-elapsed live-only" id="liveElapsedLabel"><span class="ldot"></span><span id="liveElapsedText">00:00</span></span>
                 <button class="cbtn vod-only" id="btnSkipBack" title="-10s" style="display:none;">⏪</button>
-                <div class="progress-wrap" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
                 <button class="cbtn vod-only" id="btnSkipFwd" title="+10s" style="display:none;">⏩</button>
                 <span class="time-label vod-only" id="timeLabel" style="display:none;"></span>
                 <button class="cbtn vod-only" id="btnSpeed" title="Playback speed" style="display:none; width:auto; padding:0 10px;">1x</button>
+                <span style="flex:1;"></span>
                 <button class="cbtn" id="btnFullscreen" title="Fullscreen">⛶</button>
             </div>
         </div>
@@ -183,12 +212,20 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
 
     <div class="stats-grid live-only" id="statsGrid">
         <div class="stat-box">
+            <div class="stat-label">Status</div>
+            <div class="stat-value s-connecting" id="statStatus">Connecting…</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Video Duration</div>
+            <div class="stat-value" id="statDuration">00:00:00</div>
+        </div>
+        <div class="stat-box">
             <div class="stat-label">Quality</div>
             <select class="stat-select" id="qualitySelect"><option value="-1">Auto</option></select>
         </div>
         <div class="stat-box">
-            <div class="stat-label">Bitrate</div>
-            <div class="stat-value" id="statBitrate">0 kbps</div>
+            <div class="stat-label">Audio 🔊</div>
+            <button type="button" class="audio-toggle on" id="audioToggle"><span id="audioToggleText">ON</span></button>
         </div>
         <div class="stat-box">
             <div class="stat-label">Buffer</div>
@@ -197,6 +234,14 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
         <div class="stat-box">
             <div class="stat-label">Latency</div>
             <div class="stat-value" id="statLatency">--</div>
+        </div>
+        <div class="stat-box wide">
+            <div class="stat-label">Video Progress</div>
+            <div class="progress-row">
+                <span class="progress-time" id="progressLeftTime">00:00:00</span>
+                <div class="progress-wrap" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
+                <span class="progress-time right" id="progressRightTime">00:00:00</span>
+            </div>
         </div>
     </div>
 </main>
@@ -230,9 +275,14 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
     var liveElapsedText = document.getElementById("liveElapsedText");
     var statsGrid = document.getElementById("statsGrid");
     var qualitySelect = document.getElementById("qualitySelect");
-    var statBitrate = document.getElementById("statBitrate");
     var statBuffer = document.getElementById("statBuffer");
     var statLatency = document.getElementById("statLatency");
+    var statStatus = document.getElementById("statStatus");
+    var statDuration = document.getElementById("statDuration");
+    var audioToggle = document.getElementById("audioToggle");
+    var audioToggleText = document.getElementById("audioToggleText");
+    var progressLeftTime = document.getElementById("progressLeftTime");
+    var progressRightTime = document.getElementById("progressRightTime");
 
     var hls = null;
     var isLive = true;
@@ -281,6 +331,33 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
     }
     function hideOverlay() { overlay.classList.add("hidden"); }
 
+    // ─────────── Status box (Connecting / LIVE / ENDED) ───────────
+    function setStatus(state) {
+        statStatus.classList.remove("s-live", "s-ended", "s-connecting");
+        if (state === "live") {
+            statStatus.textContent = "LIVE";
+            statStatus.classList.add("s-live");
+        } else if (state === "ended") {
+            statStatus.textContent = "ENDED";
+            statStatus.classList.add("s-ended");
+        } else {
+            statStatus.textContent = "Connecting…";
+            statStatus.classList.add("s-connecting");
+        }
+    }
+
+    // ─────────── Audio ON/OFF toggle ───────────
+    function setAudioUI(on) {
+        audioToggle.classList.toggle("on", on);
+        audioToggle.classList.toggle("off", !on);
+        audioToggleText.textContent = on ? "ON" : "OFF";
+    }
+    audioToggle.addEventListener("click", function () {
+        video.muted = !video.muted;
+    });
+    video.addEventListener("volumechange", function () { setAudioUI(!video.muted); });
+    setAudioUI(!video.muted);
+
     // Browsers unmuted autoplay ko almost always block karte hain (koi
     // prior user-interaction na ho to). Purana code sirf unmuted play()
     // retry karta tha — agar wo block ho jaaye to video hamesha ke liye
@@ -301,14 +378,17 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
 
     // ─────────── Quality selector (Auto ya manual — live mein bhi) ───────────
     function populateQualityLevels() {
-        if (!hls || !hls.levels) return;
-        qualitySelect.innerHTML = '<option value="-1">Auto</option>';
+        if (!hls || !hls.levels || !hls.levels.length) return;
+        var seenHeights = {};
+        var html = '<option value="-1">Auto</option>';
         hls.levels.forEach(function (level, idx) {
-            var opt = document.createElement("option");
-            opt.value = idx;
-            opt.textContent = (level.height || "?") + "p";
-            qualitySelect.appendChild(opt);
+            var h = level.height || 0;
+            if (h && seenHeights[h]) return; // dedupe duplicate renditions at same height
+            if (h) seenHeights[h] = true;
+            var label = h ? h + "p" : "Level " + (idx + 1);
+            html += '<option value="' + idx + '">' + label + '</option>';
         });
+        qualitySelect.innerHTML = html;
         qualitySelect.value = String(hls.currentLevel);
     }
     qualitySelect.addEventListener("change", function () {
@@ -340,6 +420,7 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
     function showLiveEnded() {
         if (hls) { hls.destroy(); hls = null; }
         liveBadge.classList.remove("show");
+        setStatus("ended");
         showError("Live class end ho gayi hai.");
     }
 
@@ -374,6 +455,12 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
                 manifestEverLoaded = true;
                 clearLoadWatchdog();
                 attemptAutoplay();
+                populateQualityLevels();
+            });
+
+            // Kabhi-kabhi renditions manifest parse ke baad update hoti hain —
+            // is se Quality dropdown mein 480p/720p/1080p sahi se aa jaate hain.
+            hls.on(Hls.Events.LEVELS_UPDATED, function () {
                 populateQualityLevels();
             });
 
@@ -452,6 +539,7 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
         if (isLive) {
             hideOverlay();
             liveBadge.classList.add("show");
+            setStatus("live");
         }
     });
     video.addEventListener("error", function () {
@@ -522,6 +610,7 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
                 if (!video.paused && !video.ended && video.currentTime > 0) {
                     if (!overlay.classList.contains("hidden")) hideOverlay();
                     liveBadge.classList.add("show");
+                    setStatus("live");
                 }
                 if (video.seekable.length) {
                     var end = video.seekable.end(video.seekable.length - 1);
@@ -548,7 +637,7 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
         return (h ? h + ":" : "") + String(m).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
     }
 
-    // Bitrate/Buffer/Latency — real values, hls.js se seedha nikale gaye
+    // Buffer/Latency — real values, hls.js se seedha nikale gaye
     function updateLiveStats() {
         var bufferedSecs = 0;
         if (video.buffered && video.buffered.length) {
@@ -558,11 +647,6 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
         }
         statBuffer.textContent = bufferedSecs.toFixed(1) + "s";
 
-        if (hls && hls.levels && hls.levels[hls.currentLevel]) {
-            var bps = hls.levels[hls.currentLevel].bitrate;
-            statBitrate.textContent = bps ? Math.round(bps / 1000) + " kbps" : "0 kbps";
-        }
-
         // hls.latency ke bina proper PROGRAM-DATE-TIME sync ke bahut bada/
         // galat value de sakta hai — sirf sane range mein hi dikhao.
         if (hls && typeof hls.latency === "number" && !isNaN(hls.latency) && hls.latency >= 0 && hls.latency < 60) {
@@ -571,6 +655,34 @@ footer { text-align:center; color:var(--muted); font-size:11.5px; padding:14px; 
             statLatency.textContent = "--";
         }
     }
+
+    // Total elapsed live duration, interpolated smoothly between playlist refreshes.
+    function currentElapsedDuration() {
+        if (liveDurationBase === null) return 0;
+        return liveDurationBase + (Date.now() - liveDurationBaseAt) / 1000;
+    }
+
+    // Video Duration (replaces Bitrate) + right-side live-edge time inside
+    // the Video Progress box — dono ek hi value hain, har 4 seconds refresh.
+    setInterval(function () {
+        if (!isLive) return;
+        var text = fmt(currentElapsedDuration());
+        statDuration.textContent = text;
+        progressRightTime.textContent = text;
+    }, 4000);
+
+    // Left-side "user is watching at" time in the Video Progress box —
+    // absolute position within the live class, ticking every second.
+    setInterval(function () {
+        if (!isLive) return;
+        try {
+            var edge = (hls && hls.liveSyncPosition) ? hls.liveSyncPosition
+                : (video.seekable.length ? video.seekable.end(video.seekable.length - 1) : video.currentTime);
+            var behind = Math.max(0, edge - video.currentTime);
+            var absPos = Math.max(0, currentElapsedDuration() - behind);
+            progressLeftTime.textContent = fmt(absPos);
+        } catch (e) {}
+    }, 1000);
 
     progressWrap.addEventListener("click", function (e) {
         var rect = progressWrap.getBoundingClientRect();
