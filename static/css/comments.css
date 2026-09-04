@@ -197,3 +197,14 @@
     .msc-msg-bubble img.msc-msg-img { max-width:170px; max-height:170px; }
     .msc-emoji-picker { grid-template-columns:repeat(6, 1fr); }
 }
+
+/* ── hidden-attribute fix ──
+   .msc-panel / .msc-modal-overlay / .msc-emoji-picker each set their own
+   unconditional `display:` value above, which — being an author-stylesheet
+   rule — beats the browser's default `[hidden]{display:none}` UA rule no
+   matter what the element's specificity is. Net effect without this: those
+   three elements stayed visible (panel + profile popup showing right on
+   page load, and never actually hiding after Save) even though the JS was
+   correctly toggling `hidden` the whole time. This forces `hidden` to always
+   win, for these and any future msc-* element toggled the same way. */
+[hidden] { display:none !important; }
